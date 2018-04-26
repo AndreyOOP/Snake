@@ -8,6 +8,6 @@ namespace SnakeGame.Model.BaseClasses
 {
     public enum State
     {
-        PAUSE, GAME_OVER, IN_GAME
+        IN_GAME, PAUSE, GAME_OVER
     }
 }

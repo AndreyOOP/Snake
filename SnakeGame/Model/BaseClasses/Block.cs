@@ -12,6 +12,7 @@ namespace SnakeGame.Model.BaseClasses
         public BlockType Type {get; private set;}
         public int X { get; set; }
         public int Y { get; set; }
+        public Direction Dir { get; set; }
 
         public Block(BlockType type)
         {
@@ -22,8 +23,11 @@ namespace SnakeGame.Model.BaseClasses
 
         public void Draw(Graphics g)
         {
+            if(Dir != Direction.UP)
+                g.FillRectangle(Brushes.Aqua, new Rectangle(X, Y, GameProperties.Cell.SIZE, GameProperties.Cell.SIZE));
+            else
+                g.FillRectangle(Brushes.Beige, new Rectangle(X, Y, GameProperties.Cell.SIZE, GameProperties.Cell.SIZE));
             //draw based on type & bitmap
-            throw new NotImplementedException();
         }
     }
 }

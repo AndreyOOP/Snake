@@ -60,10 +60,14 @@
     <Compile Include="Model\GameModel.cs" />
     <Compile Include="Model\BaseClasses\IComponent.cs" />
     <Compile Include="Model\BaseClasses\ILeaf.cs" />
+    <Compile Include="Model\PauseComponent.cs" />
     <Compile Include="Model\PlayerSnake.cs" />
     <Compile Include="Model\ScoreModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="GameView.resx">
+      <DependentUpon>GameView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

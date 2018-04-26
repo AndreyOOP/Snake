@@ -39,7 +39,6 @@ namespace SnakeGame
             {
                 case 'p':
                     model.GameState = State.PAUSE;
-                    //model.Add("pause", new PauseModel); //todo
                     break;
 
                 case 'n':
@@ -47,30 +46,35 @@ namespace SnakeGame
                     break;
 
                 case 'a':
+                    model.GameState = State.IN_GAME;
                     snake.HeadDir = Direction.LEFT;
+                    ((Block)snake.Get("1")).Dir = Direction.LEFT;
                     break;
 
                 case 'd':
+                    model.GameState = State.IN_GAME;
                     snake.HeadDir = Direction.RIGHT;
+                    ((Block)snake.Get("1")).Dir = Direction.RIGHT;
                     break;
 
                 case 'w':
+                    model.GameState = State.IN_GAME;
                     snake.HeadDir = Direction.UP;
+                    ((Block)snake.Get("1")).Dir = Direction.UP;
                     break;
 
                 case 's':
+                    model.GameState = State.IN_GAME;
                     snake.HeadDir = Direction.DOWN;
+                    ((Block)snake.Get("1")).Dir = Direction.DOWN;
                     break;
             }
         }
 
         public void GameUpdate(object sender, EventArgs e)
         {
-            //turn off pause & game over view
-
             if (model.GameState == State.PAUSE)
             {
-                //add pause view | turn on pause view
                 view.Refresh();
                 return;
             }
@@ -108,7 +112,7 @@ namespace SnakeGame
                 //    break;
 
                 case BlockType.NOTHING:
-                    //model.Snake.Move();
+                    ((PlayerSnake)model.Get("snake")).Move();
                     break;
             }
 
@@ -125,7 +129,7 @@ namespace SnakeGame
 
         private BlockType CheckIntersection()
         {
-            throw new NotImplementedException();
+            return BlockType.NOTHING;
         }
 
         public IEnumerable<ILeaf> GetElementsForDraw()

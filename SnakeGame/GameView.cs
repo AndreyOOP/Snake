@@ -13,7 +13,7 @@ namespace SnakeGame
 
         public GameView()
         {
-            ClientSize     = new System.Drawing.Size(GameProperties.Window.SIZE_X, GameProperties.Window.SIZE_X);
+            ClientSize     = new System.Drawing.Size(GameProperties.Window.SIZE_X, GameProperties.Window.SIZE_Y);
             Text           = GameProperties.Window.NAME;
             DoubleBuffered = true;
             KeyPreview     = true;

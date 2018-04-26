@@ -8,6 +8,6 @@ namespace SnakeGame.Model.BaseClasses
 {
     public enum BlockType
     {
-        DIAMOND, LIFE, SNAKE, BORDER
+        DIAMOND, LIFE, SNAKE, BORDER, NOTHING
     }
 }
