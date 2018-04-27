@@ -31,7 +31,7 @@ namespace SnakeGame
             public static readonly Direction START_DIRECTION = Direction.RIGHT;
         }
 
-        public static readonly int SPEED = 150;
+        public static readonly int SPEED = 200;
         public static readonly int DIAMONDS_UPDATE = 10000;
     }
 }

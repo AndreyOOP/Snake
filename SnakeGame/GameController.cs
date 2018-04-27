@@ -45,7 +45,7 @@ namespace SnakeGame
 
                 case 'n':
                     model.Initialize();
-                    timer2.Interval = GameProperties.DIAMONDS_UPDATE; // reset is not work ?
+                    timer.Interval = GameProperties.SPEED; // reset is not work ?
                     break;
 
                 case 'a':
@@ -102,12 +102,15 @@ namespace SnakeGame
 
         public void AddDiamonds(object sender, EventArgs e)
         {
-            var diamonds = (Diamonds)model.Get("diamonds");
-            diamonds.Add(new Diamond(3, 3));
-            diamonds.Add(new Diamond(13, 14));
-            diamonds.Add(new Diamond(6, 9));
+            if (model.GameState != State.IN_GAME) return;
 
-            if (timer.Interval > 10) //increase speed
+            var diamonds = (Diamonds)model.Get("diamonds");
+            Random r = new Random();
+            
+            for(int i=0; i<r.Next(2, 7); i++)
+                diamonds.Add(new Diamond(r.Next(GameProperties.Field.SIZE_X), r.Next(GameProperties.Field.SIZE_Y)));
+
+            if (timer.Interval > 10)
                 timer.Interval -= 10;
         }
 
@@ -122,6 +125,15 @@ namespace SnakeGame
 
             if (isOutOfField)
                 return BlockType.BORDER;
+
+
+            foreach(var b in ((PlayerSnake)model.Get("snake")).GetAll())
+            {
+                if(b.GetType() == typeof(SnakeBody))
+                    if (((SnakeBody)b).X == head.X && ((SnakeBody)b).Y == head.Y)
+                        return BlockType.SNAKE;
+            }
+
 
             foreach(var d in ((Diamonds)model.Get("diamonds")).GetAll())
             {
