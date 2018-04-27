@@ -1,12 +1,14 @@
 ﻿using SnakeGame.Model.BaseClasses;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace SnakeGame.Model
 {
     public class MessageComponent : BaseComponent
     {
         private State state;
-        private string message;
+
+        private Image texture;
 
         public State State {
             get
@@ -17,9 +19,9 @@ namespace SnakeGame.Model
             {
                 state = value;
                 if(value == State.PAUSE)
-                    message = "Paused";
+                    texture = new Bitmap($"{Application.StartupPath}\\Resources\\About.png");
                 else if (value == State.GAME_OVER)
-                    message = "Game Over";
+                    texture = new Bitmap($"{Application.StartupPath}\\Resources\\GameOver.png");
             }
         }
 
@@ -27,11 +29,8 @@ namespace SnakeGame.Model
         {
             if (state == State.PAUSE || state == State.GAME_OVER)
             {
-                g.FillRectangle(Brushes.Aqua, new Rectangle(Position.X, Position.Y + 10 * GameProperties.Cell.SIZE, GameProperties.Window.SIZE_X, 5 * GameProperties.Cell.SIZE));
-                g.DrawString(message, SystemFonts.DefaultFont, Brushes.Red, new Point(20, 10 * GameProperties.Cell.SIZE + 20));
+                g.DrawImage(texture, Position);
             }
-
-            base.Draw(g);
         }
     }
 }

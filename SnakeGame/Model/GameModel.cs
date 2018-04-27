@@ -34,7 +34,7 @@ namespace SnakeGame.Model
 
             Add(new PlayerSnake(GameProperties.Snake.HEAD_POSITION, GameProperties.Snake.HEAD_DIRECTION));
 
-            Add(new MessageComponent());
+            Add(new MessageComponent() { Position = new Point(90, GameProperties.Window.SCORE_Y + 60) });
 
             GameState = State.PAUSE;
         }
