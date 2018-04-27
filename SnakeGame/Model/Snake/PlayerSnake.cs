@@ -1,4 +1,5 @@
 ﻿using SnakeGame.Model.BaseClasses;
+using SnakeGame.Model.Snake;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,37 +11,31 @@ namespace SnakeGame.Model
 {
     public class PlayerSnake : BaseComponent
     {
-        public Direction HeadDir { get; set; }
-        public Point Head { get; set; }
-
         public PlayerSnake(Point Head, Direction HeadDir)
         {
-            this.Head    = Head;
-            this.HeadDir = HeadDir;
-
-            Add("1", new Block(BlockType.SNAKE) { X = Head.X, Y = Head.Y, Dir = HeadDir });
+            Add("1", new SnakeHead() { Type = BlockType.SNAKE, X = Head.X, Y = Head.Y, BlockDir = HeadDir });
         }
 
         public void Move()
         {
-            Block h = (Block)Get("1");
+            SnakeHead head = (SnakeHead)Get("1");
 
-            switch (HeadDir)
+            switch (head.BlockDir)
             {
                 case Direction.UP:
-                    h.Y -= GameProperties.Cell.SIZE;
+                    head.Y -= GameProperties.Cell.SIZE;
                     break;
 
                 case Direction.DOWN:
-                    h.Y += GameProperties.Cell.SIZE;
+                    head.Y += GameProperties.Cell.SIZE;
                     break;
 
                 case Direction.LEFT:
-                    h.X -= GameProperties.Cell.SIZE;
+                    head.X -= GameProperties.Cell.SIZE;
                     break;
 
                 case Direction.RIGHT:
-                    h.X += GameProperties.Cell.SIZE;
+                    head.X += GameProperties.Cell.SIZE;
                     break;
             }
         }

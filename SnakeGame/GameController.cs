@@ -1,5 +1,6 @@
 ﻿using SnakeGame.Model;
 using SnakeGame.Model.BaseClasses;
+using SnakeGame.Model.Snake;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,19 +24,20 @@ namespace SnakeGame
             this.model = model;
             this.view  = view;
 
-            timer = new Timer() { Enabled = true, Interval = GameProperties.PERIOD};
+            timer = new Timer() { Enabled = true, Interval = GameProperties.SPEED};
             timer.Tick += UpdateModelBasedOnKeyPressed;
             timer.Tick += GameUpdate;
 
-            timer2 = new Timer() { Enabled = true, Interval = GameProperties.PERIOD2 };
+            timer2 = new Timer() { Enabled = true, Interval = GameProperties.DIAMONDS_UPDATE };
             timer2.Tick += AddDiamonds;
         }
 
         public void UpdateModelBasedOnKeyPressed(object sender, EventArgs e)
         {
             PlayerSnake snake = (PlayerSnake)model.Get("snake");
+            SnakeHead   head  = (SnakeHead)snake.Get("1");
 
-            switch (PressedKey)
+            switch (Char.ToLower(PressedKey))
             {
                 case 'p':
                     model.GameState = State.PAUSE;
@@ -47,26 +49,22 @@ namespace SnakeGame
 
                 case 'a':
                     model.GameState = State.IN_GAME;
-                    snake.HeadDir = Direction.LEFT;
-                    ((Block)snake.Get("1")).Dir = Direction.LEFT;
+                    head.BlockDir = Direction.LEFT;
                     break;
 
                 case 'd':
                     model.GameState = State.IN_GAME;
-                    snake.HeadDir = Direction.RIGHT;
-                    ((Block)snake.Get("1")).Dir = Direction.RIGHT;
+                    head.BlockDir = Direction.RIGHT;
                     break;
 
                 case 'w':
                     model.GameState = State.IN_GAME;
-                    snake.HeadDir = Direction.UP;
-                    ((Block)snake.Get("1")).Dir = Direction.UP;
+                    head.BlockDir = Direction.UP;
                     break;
 
                 case 's':
                     model.GameState = State.IN_GAME;
-                    snake.HeadDir = Direction.DOWN;
-                    ((Block)snake.Get("1")).Dir = Direction.DOWN;
+                    head.BlockDir = Direction.DOWN;
                     break;
             }
         }
@@ -129,6 +127,9 @@ namespace SnakeGame
 
         private BlockType CheckIntersection()
         {
+            //check if snake head inside borders
+
+
             return BlockType.NOTHING;
         }
 

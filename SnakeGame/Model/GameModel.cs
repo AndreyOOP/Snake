@@ -10,7 +10,6 @@ namespace SnakeGame.Model
 {
     public class GameModel : BaseComponent
     {
-        //pause, in game, game over
         private State gameState;
 
         public State GameState {
@@ -34,13 +33,11 @@ namespace SnakeGame.Model
 
             Add("field", new GameField() { position = new Point(0, GameProperties.Window.SCORE_Y) });
 
-            Add("snake", new PlayerSnake(new Point(5 * GameProperties.Cell.SIZE, 5 * GameProperties.Cell.SIZE), Direction.RIGHT));
+            Add("snake", new PlayerSnake(GameProperties.Snake.START_POSITION, GameProperties.Snake.START_DIRECTION));
 
             Add("pause", new PauseComponent());
-            //Add("snake", new PlayerSnake() {
-            //    Head = new Point(5 * GameProperties.Cell.SIZE, 5 * GameProperties.Cell.SIZE),
-            //    HeadDir = Direction.RIGHT }
-            //);
+
+            GameState = State.PAUSE;
 
             //Add("diamonds", new Diamonds());
 

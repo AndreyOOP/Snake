@@ -1,4 +1,7 @@
-﻿namespace SnakeGame
+﻿using SnakeGame.Model.BaseClasses;
+using System.Drawing;
+
+namespace SnakeGame
 {
     public class GameProperties
     {
@@ -22,7 +25,13 @@
             
         }
 
-        public static readonly int PERIOD = 150;
-        public static readonly int PERIOD2 = 10000;
+        public class Snake
+        {
+            public static readonly Point START_POSITION = new Point(5 * Cell.SIZE, 5 * Cell.SIZE);
+            public static readonly Direction START_DIRECTION = Direction.RIGHT;
+        }
+
+        public static readonly int SPEED = 150;
+        public static readonly int DIAMONDS_UPDATE = 10000;
     }
 }
