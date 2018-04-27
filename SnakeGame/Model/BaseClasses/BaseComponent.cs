@@ -21,31 +21,27 @@ namespace SnakeGame.Model
             components.Remove(item);
         }
 
-        public T Get<T>() //todo make deep search ? add to interface
+        public T Get<T>() where T : IComponent
         {
             Type type = typeof(T);
 
             return (T)components.First(t => t.GetType() == type);
         }
 
-        public IComponent Get(Type type)
+        public void Clear()
         {
-            return components.First(t => t.GetType() == type);
+            components.Clear();
         }
+        
 
-        public List<IComponent> GetAll()
-        {
-            return components;
-        }
-
-        public List<T> GetAll<T>()
+        public List<T> GetAll<T>() where T : IComponent
         {
             return components.Cast<T>().ToList();
         }
 
         public virtual void Draw(Graphics g)
         {
-            foreach (var component in GetAll())
+            foreach (var component in components)
                 component.Draw(g);
         }
     }

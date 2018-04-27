@@ -8,7 +8,7 @@ namespace SnakeGame.Model
         private State state;
         private string message;
 
-        public State Stat {
+        public State State {
             get
             {
                 return state;

@@ -1,23 +1,18 @@
 ﻿using SnakeGame.Model.BaseClasses;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakeGame.Model.Snake
 {
-    public class SnakeHead : BaseComponent
+    public class SnakeHead : SnakeBlock
     {
-        public Direction BlockDir { get; set; }
+        public SnakeHead(Point position, Direction direction) : base(position, direction) { }
 
         public override void Draw(Graphics g)
         {
             Brush brush = null;
             var rect = new Rectangle(Position.X, Position.Y, GameProperties.Cell.SIZE, GameProperties.Cell.SIZE);
 
-            switch (BlockDir)
+            switch (Direction)
             {
                 case Direction.UP   : brush = Brushes.Gray;  break;
                 case Direction.DOWN : brush = Brushes.Green; break;

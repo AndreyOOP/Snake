@@ -1,4 +1,5 @@
-﻿using SnakeGame.Model;
+﻿using SnakeGame.Constants;
+using SnakeGame.Model;
 using SnakeGame.Model.BaseClasses;
 using SnakeGame.Model.Snake;
 using SnakeGame.Services;
@@ -10,29 +11,29 @@ namespace SnakeGame
 {
     public class GameController
     {
+        public char PressedKey { get; set; }
+
         private GameModel model;
         private GameView  view;
-        private Timer     timer;
-        private Timer     timer2;
+        private Timer     frameTimer;
+        private Timer     modelUpdateTimer;
         private LevelService LevelService;
-
-        public char PressedKey { get; set; }
 
         public GameController(GameModel model, GameView view, LevelService LevelService)
         {
-            timer = new Timer() { Enabled = true, Interval = GameProperties.SPEED };
-            timer.Tick += UpdateModelBasedOnKeyPressed;
-            timer.Tick += GameUpdate;
+            frameTimer = new Timer() { Enabled = true, Interval = GameProperties.SPEED };
+            frameTimer.Tick += UpdateModelBasedOnKeyPressed;
+            frameTimer.Tick += GameModelUpdate;
 
-            timer2 = new Timer() { Enabled = true, Interval = GameProperties.DIAMONDS_UPDATE }; //move inside model ?
-            timer2.Tick += LevelService.AddDiamonds;
-            timer2.Tick += LevelService.IncreaseSpeed;
+            modelUpdateTimer = new Timer() { Enabled = true, Interval = GameProperties.DIAMONDS_UPDATE }; //move inside model ?
+            modelUpdateTimer.Tick += LevelService.AddDiamonds;
+            modelUpdateTimer.Tick += LevelService.IncreaseSpeed;
 
             this.model = model;
             this.view  = view;
 
             this.LevelService = LevelService;
-            this.LevelService.TimerX = timer;
+            this.LevelService.TimerX = frameTimer;
             this.LevelService.Model  = model;
         }
 
@@ -48,32 +49,32 @@ namespace SnakeGame
 
                 case 'n':
                     model.Initialize();
-                    timer.Interval = GameProperties.SPEED;
+                    frameTimer.Interval = GameProperties.SPEED;
                     break;
 
                 case 'a':
                     model.GameState = State.IN_GAME;
-                    head.BlockDir = Direction.LEFT;
+                    head.Direction = Direction.LEFT;
                     break;
 
                 case 'd':
                     model.GameState = State.IN_GAME;
-                    head.BlockDir = Direction.RIGHT;
+                    head.Direction = Direction.RIGHT;
                     break;
 
                 case 'w':
                     model.GameState = State.IN_GAME;
-                    head.BlockDir = Direction.UP;
+                    head.Direction = Direction.UP;
                     break;
 
                 case 's':
                     model.GameState = State.IN_GAME;
-                    head.BlockDir = Direction.DOWN;
+                    head.Direction = Direction.DOWN;
                     break;
             }
         }
 
-        public void GameUpdate(object sender, EventArgs e)
+        public void GameModelUpdate(object sender, EventArgs e)
         {
             if (model.GameState == State.PAUSE || model.GameState == State.GAME_OVER)
             {
@@ -89,10 +90,29 @@ namespace SnakeGame
                     break;
 
                 case Intersection.DIAMOND:
+
                     LevelService.RemoveIntersected();
-                    LevelService.UpdateScore();
                     LevelService.SnakeMove();
-                    LevelService.SnakeGrow();
+                    LevelService.AddScore();
+
+                    switch (model.Get<Diamonds>().Intersected.Type)
+                    {
+                        case DiamondType.SCORE_1:
+                            LevelService.SnakeGrow();
+                            break;
+
+                        case DiamondType.SCORE_2:
+                            LevelService.AddScore();
+                            LevelService.SnakeGrow();
+                            break;
+
+                        case DiamondType.SAME_LEN:
+                            break;
+
+                        case DiamondType.SHORTENER:
+                            LevelService.SnakeCut();
+                            break;
+                    }
                     break;
 
                 case Intersection.NOTHING:
@@ -105,7 +125,7 @@ namespace SnakeGame
 
         public IEnumerable<IComponent> GetElementsForDraw()
         {
-            return model.GetAll();
+            return model.GetAll<IComponent>();
         }
     }
 }

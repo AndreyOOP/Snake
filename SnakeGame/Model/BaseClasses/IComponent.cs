@@ -10,9 +10,9 @@ namespace SnakeGame.Model
 
         void Remove(IComponent item);
 
-        IComponent Get(Type type);
+        T Get<T>() where T : IComponent;
 
-        List<IComponent> GetAll();
+        List<T> GetAll<T>() where T : IComponent;
 
         void Draw(Graphics g);
     }

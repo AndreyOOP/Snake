@@ -8,18 +8,10 @@ namespace SnakeGame.Model
     {
         public PlayerSnake(Point Head, Direction HeadDir)
         {
-            Add(new SnakeHead() { Position = Head, BlockDir = HeadDir });
-            Add(new SnakeBody() { Position = new Point(Head.X - GameProperties.Cell.SIZE, Head.Y), BlockDir = HeadDir});
-            Add(new SnakeBody() { Position = new Point(Head.X - 2 * GameProperties.Cell.SIZE, Head.Y), BlockDir = HeadDir });
-        }
+            Add(new SnakeHead(Head, HeadDir));
 
-        public void Move()
-        {
-
-        }
-
-        public void Grow()
-        {
+            Add(new SnakeBody(new Point(Head.X - GameProperties.Cell.SIZE, Head.Y)  , HeadDir));
+            Add(new SnakeBody(new Point(Head.X - 2*GameProperties.Cell.SIZE, Head.Y), HeadDir));
         }
     }
 }

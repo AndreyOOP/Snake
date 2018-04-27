@@ -1,4 +1,5 @@
-﻿using SnakeGame.Model;
+﻿using SnakeGame.Constants;
+using SnakeGame.Model;
 using SnakeGame.Model.BaseClasses;
 using SnakeGame.Model.Snake;
 using System;
@@ -28,13 +29,13 @@ namespace SnakeGame.Services
                 rndX = random.Next(GameProperties.Field.SIZE_X);
                 rndY = random.Next(GameProperties.Field.SIZE_X);
 
-                diamonds.Add(new Diamond(rndX, rndY));
+                diamonds.Add(new Diamond(rndX, rndY, (DiamondType)random.Next(0, 4) ));
             }   
         }
 
         public void IncreaseSpeed(object sender, EventArgs e)
         {
-            if (TimerX.Interval > 40)
+            if (TimerX.Interval > 40 && Model.GameState == State.IN_GAME)
             {
                 TimerX.Interval -= 5;
             }
@@ -43,6 +44,8 @@ namespace SnakeGame.Services
         public Intersection CheckIntersection()
         {
             var head = Model.Get<PlayerSnake>().Get<SnakeHead>();
+            var diamonds = Model.Get<Diamonds>();
+            var snakeBlocks = Model.Get<PlayerSnake>().GetAll<SnakeBlock>();
 
             if (head.Position.X < 0 ||
                 head.Position.Y < 2 * GameProperties.Cell.SIZE ||
@@ -52,18 +55,17 @@ namespace SnakeGame.Services
                 return Intersection.BORDER;
             }
 
-            foreach (var block in Model.Get<PlayerSnake>().GetAll<SnakeHead>())
+            for(int i=1; i<snakeBlocks.Count; i++)
             {
-                if(block.GetType() == typeof(SnakeBody))
-                    if (block.Position.X == head.Position.X && block.Position.Y == head.Position.Y)
-                        return Intersection.SNAKE;
+                if (snakeBlocks[i].Position == head.Position)
+                    return Intersection.SNAKE;
             }
 
-            foreach (var diamond in Model.Get<Diamonds>().GetAll<Diamond>())
+            foreach (var diamond in diamonds.GetAll<Diamond>())
             {
-                if(diamond.Position.X == head.Position.X && diamond.Position.Y == head.Position.Y)
+                if (diamond.Position == head.Position)
                 {
-                    Model.Get<Diamonds>().Intersected = diamond;
+                    diamonds.Intersected = diamond;
                     return Intersection.DIAMOND;
                 }
             }
@@ -71,7 +73,7 @@ namespace SnakeGame.Services
             return Intersection.NOTHING;
         }
 
-        public void UpdateScore()
+        public void AddScore()
         {
             Model.Get<ScoreModel>().Score++;
         }
@@ -84,21 +86,31 @@ namespace SnakeGame.Services
         public void SnakeGrow()
         {
             var snake = Model.Get<PlayerSnake>();
-            var list  = snake.GetAll<SnakeHead>();
+            var list  = snake.GetAll<SnakeBlock>();
             var tail  = list[list.Count - 1];
 
             int x = tail.Position.X;
             int y = tail.Position.Y;
 
-            switch (tail.BlockDir)
+            switch (tail.Direction)
             {
-                case Direction.RIGHT: x -= GameProperties.Cell.SIZE; break;
-                case Direction.LEFT: x += GameProperties.Cell.SIZE; break;
-                case Direction.UP: y += GameProperties.Cell.SIZE; break;
-                case Direction.DOWN: y -= GameProperties.Cell.SIZE; break;
+                case Direction.RIGHT : x -= GameProperties.Cell.SIZE; break;
+                case Direction.LEFT  : x += GameProperties.Cell.SIZE; break;
+                case Direction.UP    : y += GameProperties.Cell.SIZE; break;
+                case Direction.DOWN  : y -= GameProperties.Cell.SIZE; break;
             }
 
-            snake.Add(new SnakeBody() { Position = new Point(x, y), BlockDir = tail.BlockDir });
+            snake.Add(new SnakeBody(new Point(x, y), tail.Direction));
+        }
+
+        public void SnakeCut()
+        {
+            var snake = Model.Get<PlayerSnake>();
+            var list  = snake.GetAll<SnakeBlock>();
+            var tail  = list[list.Count - 1];
+
+            if (list.Count > 3)
+                snake.Remove(tail);
         }
 
         public void SnakeMove()
@@ -106,12 +118,12 @@ namespace SnakeGame.Services
             var snake = Model.Get<PlayerSnake>();
             var head  = snake.Get<SnakeHead>();
 
-            foreach (var block in snake.GetAll<SnakeHead>())
+            foreach (var block in snake.GetAll<SnakeBlock>())
             {
                 int x = block.Position.X;
                 int y = block.Position.Y;
 
-                switch (block.BlockDir)
+                switch (block.Direction)
                 {
                     case Direction.RIGHT: x += GameProperties.Cell.SIZE; break;
                     case Direction.LEFT : x -= GameProperties.Cell.SIZE; break;
@@ -122,10 +134,10 @@ namespace SnakeGame.Services
                 block.Position = new Point(x, y);
             }
 
-            var list = snake.GetAll<SnakeHead>();
+            var list = snake.GetAll<SnakeBlock>();
 
             for (int i = list.Count - 1; i > 0; i--)
-                list[i].BlockDir = list[i - 1].BlockDir;
+                list[i].Direction = list[i - 1].Direction;
         }
     }
 }

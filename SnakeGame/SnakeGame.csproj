@@ -45,15 +45,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\DiamondType.cs" />
     <Compile Include="GameController.cs" />
-    <Compile Include="Constants\GameProperties.cs" />
+    <Compile Include="GameProperties.cs" />
     <Compile Include="GameView.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Model\BaseClasses\BaseComponent.cs" />
-    <Compile Include="Constants\BlockType.cs" />
-    <Compile Include="Constants\Direction.cs" />
-    <Compile Include="Constants\State.cs" />
+    <Compile Include="Enums\BlockType.cs" />
+    <Compile Include="Enums\Direction.cs" />
+    <Compile Include="Enums\State.cs" />
     <Compile Include="Model\DiamondCol\Diamond.cs" />
     <Compile Include="Model\DiamondCol\Diamonds.cs" />
     <Compile Include="Model\GameField.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Model\MessageComponent.cs" />
     <Compile Include="Model\Snake\PlayerSnake.cs" />
     <Compile Include="Model\ScoreModel.cs" />
+    <Compile Include="Model\Snake\SnakeBlock.cs" />
     <Compile Include="Model\Snake\SnakeBody.cs" />
     <Compile Include="Model\Snake\SnakeHead.cs" />
     <Compile Include="Program.cs" />

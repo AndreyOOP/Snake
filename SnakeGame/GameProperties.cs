@@ -27,8 +27,8 @@ namespace SnakeGame
 
         public class Snake
         {
-            public static readonly Point START_POSITION = new Point(5 * Cell.SIZE, 5 * Cell.SIZE);
-            public static readonly Direction START_DIRECTION = Direction.RIGHT;
+            public static readonly Point HEAD_POSITION = new Point(5 * Cell.SIZE, 5 * Cell.SIZE);
+            public static readonly Direction HEAD_DIRECTION = Direction.RIGHT;
         }
 
         public static readonly int SPEED = 200;

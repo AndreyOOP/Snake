@@ -13,7 +13,7 @@ namespace SnakeGame.Model
 
             set {
                 gameState = value;
-                Get<MessageComponent>().Stat = value;
+                Get<MessageComponent>().State = value;
             }
         }
 
@@ -24,17 +24,17 @@ namespace SnakeGame.Model
 
         public void Initialize()
         {
-            GetAll().Clear();
+            Clear();
 
             Add(new ScoreModel());
 
             Add(new GameField() { Position = new Point(0, GameProperties.Window.SCORE_Y) });
 
-            Add(new PlayerSnake(GameProperties.Snake.START_POSITION, GameProperties.Snake.START_DIRECTION));
+            Add(new Diamonds());
+
+            Add(new PlayerSnake(GameProperties.Snake.HEAD_POSITION, GameProperties.Snake.HEAD_DIRECTION));
 
             Add(new MessageComponent());
-
-            Add(new Diamonds());
 
             GameState = State.PAUSE;
         }
