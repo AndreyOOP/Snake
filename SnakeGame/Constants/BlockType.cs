@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SnakeGame.Model.BaseClasses
+﻿namespace SnakeGame.Model.BaseClasses
 {
-    public enum BlockType
+    public enum Intersection
     {
-        DIAMOND, LIFE, SNAKE, BORDER, NOTHING
+        DIAMOND, SNAKE, BORDER, NOTHING
     }
 }

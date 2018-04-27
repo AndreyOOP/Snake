@@ -1,11 +1,9 @@
 ﻿using SnakeGame.Model;
 using SnakeGame.Model.BaseClasses;
 using SnakeGame.Model.Snake;
+using SnakeGame.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SnakeGame
@@ -16,26 +14,31 @@ namespace SnakeGame
         private GameView  view;
         private Timer     timer;
         private Timer     timer2;
+        private LevelService LevelService;
 
         public char PressedKey { get; set; }
 
-        public GameController(GameModel model, GameView view)
+        public GameController(GameModel model, GameView view, LevelService LevelService)
         {
-            this.model = model;
-            this.view  = view;
-
-            timer = new Timer() { Enabled = true, Interval = GameProperties.SPEED};
+            timer = new Timer() { Enabled = true, Interval = GameProperties.SPEED };
             timer.Tick += UpdateModelBasedOnKeyPressed;
             timer.Tick += GameUpdate;
 
             timer2 = new Timer() { Enabled = true, Interval = GameProperties.DIAMONDS_UPDATE }; //move inside model ?
-            timer2.Tick += AddDiamonds;
+            timer2.Tick += LevelService.AddDiamonds;
+            timer2.Tick += LevelService.IncreaseSpeed;
+
+            this.model = model;
+            this.view  = view;
+
+            this.LevelService = LevelService;
+            this.LevelService.TimerX = timer;
+            this.LevelService.Model  = model;
         }
 
         public void UpdateModelBasedOnKeyPressed(object sender, EventArgs e)
         {
-            PlayerSnake snake = (PlayerSnake)model.Get("snake");
-            SnakeHead   head  = (SnakeHead)snake.Get("1");
+            SnakeHead head = model.Get<PlayerSnake>().Get<SnakeHead>();
 
             switch (Char.ToLower(PressedKey))
             {
@@ -45,7 +48,7 @@ namespace SnakeGame
 
                 case 'n':
                     model.Initialize();
-                    timer.Interval = GameProperties.SPEED; // reset is not work ?
+                    timer.Interval = GameProperties.SPEED;
                     break;
 
                 case 'a':
@@ -78,76 +81,29 @@ namespace SnakeGame
                 return;
             }
 
-            switch (CheckIntersection())
+            switch (LevelService.CheckIntersection())
             {
-                case BlockType.BORDER:
-                case BlockType.SNAKE:
+                case Intersection.BORDER:
+                case Intersection.SNAKE:
                     model.GameState = State.GAME_OVER;
                     break;
 
-                case BlockType.DIAMOND:
-                    ((ScoreModel)model.Get("score")).Score += 1;
-                    ((PlayerSnake)model.Get("snake")).Move();
-                    ((PlayerSnake)model.Get("snake")).Grow();
-                    ((Diamonds)model.Get("diamonds")).RemoveIntersected();
+                case Intersection.DIAMOND:
+                    LevelService.RemoveIntersected();
+                    LevelService.UpdateScore();
+                    LevelService.SnakeMove();
+                    LevelService.SnakeGrow();
                     break;
 
-                case BlockType.NOTHING:
-                    ((PlayerSnake)model.Get("snake")).Move();
+                case Intersection.NOTHING:
+                    LevelService.SnakeMove();
                     break;
             }
 
             view.Refresh();
         }
 
-        public void AddDiamonds(object sender, EventArgs e)
-        {
-            if (model.GameState != State.IN_GAME) return;
-
-            var diamonds = (Diamonds)model.Get("diamonds");
-            Random r = new Random();
-            
-            for(int i=0; i<r.Next(2, 7); i++)
-                diamonds.Add(new Diamond(r.Next(GameProperties.Field.SIZE_X), r.Next(GameProperties.Field.SIZE_Y)));
-
-            if (timer.Interval > 10)
-                timer.Interval -= 10;
-        }
-
-        private BlockType CheckIntersection()
-        {
-            SnakeHead head = (SnakeHead)((PlayerSnake)model.Get("snake")).Get("1");
-
-            var isOutOfField = head.X < 0 ||
-                               head.Y < 2 * GameProperties.Cell.SIZE ||
-                               head.X > (GameProperties.Field.SIZE_X - 1) * GameProperties.Cell.SIZE ||
-                               head.Y > (GameProperties.Field.SIZE_Y + 1) * GameProperties.Cell.SIZE;
-
-            if (isOutOfField)
-                return BlockType.BORDER;
-
-
-            foreach(var b in ((PlayerSnake)model.Get("snake")).GetAll())
-            {
-                if(b.GetType() == typeof(SnakeBody))
-                    if (((SnakeBody)b).X == head.X && ((SnakeBody)b).Y == head.Y)
-                        return BlockType.SNAKE;
-            }
-
-
-            foreach(var d in ((Diamonds)model.Get("diamonds")).GetAll())
-            {
-                if (((Diamond)d).X == head.X && ((Diamond)d).Y == head.Y)
-                {
-                    ((Diamonds)model.Get("diamonds")).Intersected = ((Diamond)d).Name;
-                    return BlockType.DIAMOND;
-                }                    
-            }
-
-            return BlockType.NOTHING;
-        }
-
-        public IEnumerable<ILeaf> GetElementsForDraw()
+        public IEnumerable<IComponent> GetElementsForDraw()
         {
             return model.GetAll();
         }

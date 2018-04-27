@@ -1,8 +1,6 @@
 ﻿using SnakeGame.Model;
+using SnakeGame.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SnakeGame
@@ -19,7 +17,7 @@ namespace SnakeGame
 
             GameView view = new GameView();
 
-            GameController controller = new GameController(model, view);
+            GameController controller = new GameController(model, view, new LevelService());
 
             view.Controller = controller;
 

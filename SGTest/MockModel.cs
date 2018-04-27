@@ -12,7 +12,7 @@ namespace SGTest
     {
         public MockModel()
         {
-            Add("x", new Block(BlockType.DIAMOND) { X = 10, Y = 20 });
+            Add("x", new Block(Intersection.DIAMOND) { X = 10, Y = 20 });
         }
     }
 }

@@ -2,36 +2,48 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakeGame.Model
 {
     public class BaseComponent : IComponent
     {
-        private Dictionary<string, ILeaf> components = new Dictionary<string, ILeaf>();
+        public Point Position { get; set; }
 
-        public void Add(string name, ILeaf leaf)
+        private List<IComponent> components = new List<IComponent>();
+
+        public void Add(IComponent item)
         {
-            components[name] = leaf;
+            components.Add(item);
         }
 
-        public void Remove(string name)
+        public void Remove(IComponent item)
         {
-            components.Remove(name);
+            components.Remove(item);
         }
 
-        public ILeaf Get(string name)
+        public T Get<T>() //todo make deep search ? add to interface
         {
-            return components[name];
+            Type type = typeof(T);
+
+            return (T)components.First(t => t.GetType() == type);
         }
 
-        public IEnumerable<ILeaf> GetAll()
+        public IComponent Get(Type type)
         {
-            return components.Values;
+            return components.First(t => t.GetType() == type);
         }
 
-        public void Draw(Graphics g)
+        public List<IComponent> GetAll()
+        {
+            return components;
+        }
+
+        public List<T> GetAll<T>()
+        {
+            return components.Cast<T>().ToList();
+        }
+
+        public virtual void Draw(Graphics g)
         {
             foreach (var component in GetAll())
                 component.Draw(g);

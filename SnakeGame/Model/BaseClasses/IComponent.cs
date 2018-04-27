@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 
 namespace SnakeGame.Model
 {
-    public interface IComponent : ILeaf
+    public interface IComponent
     {
-        void Add(string name, ILeaf leaf);
-        ILeaf Get(string name);
-        void Remove(string name);
-        IEnumerable<ILeaf> GetAll();
+        void Add(IComponent item);
+
+        void Remove(IComponent item);
+
+        IComponent Get(Type type);
+
+        List<IComponent> GetAll();
+
+        void Draw(Graphics g);
     }
 }

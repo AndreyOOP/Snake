@@ -32,6 +32,6 @@ namespace SnakeGame
         }
 
         public static readonly int SPEED = 200;
-        public static readonly int DIAMONDS_UPDATE = 10000;
+        public static readonly int DIAMONDS_UPDATE = 5000;
     }
 }

@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace SnakeGame.Model.Snake
 {
-    public class SnakeHead : Block
+    public class SnakeHead : BaseComponent
     {
         public Direction BlockDir { get; set; }
 
         public override void Draw(Graphics g)
         {
             Brush brush = null;
-            var rect = new Rectangle(X, Y, GameProperties.Cell.SIZE, GameProperties.Cell.SIZE);
+            var rect = new Rectangle(Position.X, Position.Y, GameProperties.Cell.SIZE, GameProperties.Cell.SIZE);
 
             switch (BlockDir)
             {

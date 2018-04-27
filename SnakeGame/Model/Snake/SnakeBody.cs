@@ -12,7 +12,7 @@ namespace SnakeGame.Model.Snake
     {
         public override void Draw(Graphics g)
         {
-            g.FillRectangle(Brushes.Aqua, new Rectangle(X, Y, GameProperties.Cell.SIZE, GameProperties.Cell.SIZE));
+            g.FillRectangle(Brushes.Aqua, new Rectangle(Position.X, Position.Y, GameProperties.Cell.SIZE, GameProperties.Cell.SIZE));
         }
     }
 }

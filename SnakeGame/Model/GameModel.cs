@@ -1,10 +1,5 @@
 ﻿using SnakeGame.Model.BaseClasses;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SnakeGame.Model
 {
@@ -18,7 +13,7 @@ namespace SnakeGame.Model
 
             set {
                 gameState = value;
-                ((MessageComponent)Get("pause")).Stat = value;
+                Get<MessageComponent>().Stat = value;
             }
         }
 
@@ -29,22 +24,19 @@ namespace SnakeGame.Model
 
         public void Initialize()
         {
-            Add("score", new ScoreModel());
+            GetAll().Clear();
 
-            Add("field", new GameField() { position = new Point(0, GameProperties.Window.SCORE_Y) });
+            Add(new ScoreModel());
 
-            Add("snake", new PlayerSnake(GameProperties.Snake.START_POSITION, GameProperties.Snake.START_DIRECTION));
+            Add(new GameField() { Position = new Point(0, GameProperties.Window.SCORE_Y) });
 
-            Add("pause", new MessageComponent());
+            Add(new PlayerSnake(GameProperties.Snake.START_POSITION, GameProperties.Snake.START_DIRECTION));
 
-            Add("diamonds", new Diamonds());
-            //Add("d1010", new Diamond() { Type = BlockType.DIAMOND, X = 10 * GameProperties.Cell.SIZE, Y = 10 * GameProperties.Cell.SIZE });
+            Add(new MessageComponent());
+
+            Add(new Diamonds());
 
             GameState = State.PAUSE;
-
-            //Add("diamonds", new Diamonds());
-
-
         }
     }
 }
