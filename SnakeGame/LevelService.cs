@@ -29,15 +29,27 @@ namespace SnakeGame.Services
                 rndX = random.Next(GameProperties.Field.SIZE_X);
                 rndY = random.Next(GameProperties.Field.SIZE_X);
 
-                diamonds.Add(new Diamond(rndX, rndY, (DiamondType)random.Next(0, 4) ));
+                diamonds.Add(new Diamond(rndX, rndY, GetRandomType()));
             }   
+        }
+
+        private DiamondType GetRandomType()
+        {
+            switch (random.Next(10))
+            {
+                case 9 : return DiamondType.SHORTENER;
+                case 8 : return DiamondType.SAME_LEN;
+                case 7 :
+                case 6 : return DiamondType.SCORE_2;
+                default: return DiamondType.SCORE_1;
+            }
         }
 
         public void IncreaseSpeed(object sender, EventArgs e)
         {
             if (TimerX.Interval > 40 && Model.GameState == State.IN_GAME)
             {
-                TimerX.Interval -= 5;
+                TimerX.Interval -= 2;
             }
         }
 
