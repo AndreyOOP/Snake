@@ -18,7 +18,7 @@ namespace SnakeGame.Model
 
             set {
                 gameState = value;
-                ((PauseComponent)Get("pause")).Visible = value == State.PAUSE ? true : false;
+                ((MessageComponent)Get("pause")).Stat = value;
             }
         }
 
@@ -35,7 +35,10 @@ namespace SnakeGame.Model
 
             Add("snake", new PlayerSnake(GameProperties.Snake.START_POSITION, GameProperties.Snake.START_DIRECTION));
 
-            Add("pause", new PauseComponent());
+            Add("pause", new MessageComponent());
+
+            Add("diamonds", new Diamonds());
+            //Add("d1010", new Diamond() { Type = BlockType.DIAMOND, X = 10 * GameProperties.Cell.SIZE, Y = 10 * GameProperties.Cell.SIZE });
 
             GameState = State.PAUSE;
 

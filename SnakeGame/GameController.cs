@@ -28,7 +28,7 @@ namespace SnakeGame
             timer.Tick += UpdateModelBasedOnKeyPressed;
             timer.Tick += GameUpdate;
 
-            timer2 = new Timer() { Enabled = true, Interval = GameProperties.DIAMONDS_UPDATE };
+            timer2 = new Timer() { Enabled = true, Interval = GameProperties.DIAMONDS_UPDATE }; //move inside model ?
             timer2.Tick += AddDiamonds;
         }
 
@@ -45,6 +45,7 @@ namespace SnakeGame
 
                 case 'n':
                     model.Initialize();
+                    timer2.Interval = GameProperties.DIAMONDS_UPDATE; // reset is not work ?
                     break;
 
                 case 'a':
@@ -71,43 +72,25 @@ namespace SnakeGame
 
         public void GameUpdate(object sender, EventArgs e)
         {
-            if (model.GameState == State.PAUSE)
+            if (model.GameState == State.PAUSE || model.GameState == State.GAME_OVER)
             {
                 view.Refresh();
                 return;
             }
 
-            if (model.GameState == State.GAME_OVER)
-            {
-                //add game over view
-                view.Refresh();
-                return;
-            }
-            
-            //turn off pause & game over view
-
-            //check intersections
-            //get head intersection - border, snake, diamond(type) - BlockType
             switch (CheckIntersection())
             {
                 case BlockType.BORDER:
                 case BlockType.SNAKE:
                     model.GameState = State.GAME_OVER;
-                    //model.Add - Game Over view | turn on game over view
                     break;
 
                 case BlockType.DIAMOND:
-                    //model.Score update
-                    //model.Snake Grow
-                    //model.Diamond - remove
-                    //model.Snake.Move();
+                    ((ScoreModel)model.Get("score")).Score += 1;
+                    ((PlayerSnake)model.Get("snake")).Move();
+                    ((PlayerSnake)model.Get("snake")).Grow();
+                    ((Diamonds)model.Get("diamonds")).RemoveIntersected();
                     break;
-
-                //case BlockType.LIFE:
-                //    //model.Lifes update
-                //    //model.Life - remove
-                //    //model.Snake.Move();
-                //    break;
 
                 case BlockType.NOTHING:
                     ((PlayerSnake)model.Get("snake")).Move();
@@ -119,7 +102,10 @@ namespace SnakeGame
 
         public void AddDiamonds(object sender, EventArgs e)
         {
-            //model.Get("diamonds").Add(); //add few random diamonds
+            var diamonds = (Diamonds)model.Get("diamonds");
+            diamonds.Add(new Diamond(3, 3));
+            diamonds.Add(new Diamond(13, 14));
+            diamonds.Add(new Diamond(6, 9));
 
             if (timer.Interval > 10) //increase speed
                 timer.Interval -= 10;
@@ -127,8 +113,24 @@ namespace SnakeGame
 
         private BlockType CheckIntersection()
         {
-            //check if snake head inside borders
+            SnakeHead head = (SnakeHead)((PlayerSnake)model.Get("snake")).Get("1");
 
+            var isOutOfField = head.X < 0 ||
+                               head.Y < 2 * GameProperties.Cell.SIZE ||
+                               head.X > (GameProperties.Field.SIZE_X - 1) * GameProperties.Cell.SIZE ||
+                               head.Y > (GameProperties.Field.SIZE_Y + 1) * GameProperties.Cell.SIZE;
+
+            if (isOutOfField)
+                return BlockType.BORDER;
+
+            foreach(var d in ((Diamonds)model.Get("diamonds")).GetAll())
+            {
+                if (((Diamond)d).X == head.X && ((Diamond)d).Y == head.Y)
+                {
+                    ((Diamonds)model.Get("diamonds")).Intersected = ((Diamond)d).Name;
+                    return BlockType.DIAMOND;
+                }                    
+            }
 
             return BlockType.NOTHING;
         }
