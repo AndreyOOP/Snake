@@ -13,11 +13,12 @@ namespace SnakeGame
 
         public GameView()
         {
-            ClientSize     = new System.Drawing.Size(GameProperties.Window.SIZE_X, GameProperties.Window.SIZE_Y);
-            Text           = GameProperties.Window.NAME;
-            DoubleBuffered = true;
-            KeyPreview     = true;
-            //todo window have to be not resizable
+            ClientSize      = new System.Drawing.Size(GameProperties.Window.SIZE_X, GameProperties.Window.SIZE_Y);
+            Text            = GameProperties.Window.NAME;
+            DoubleBuffered  = true;
+            KeyPreview      = true;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox     = false;
 
             KeyPress += GetUserInput;
             Paint    += DrawModel;
