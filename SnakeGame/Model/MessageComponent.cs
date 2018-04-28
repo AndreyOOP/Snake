@@ -9,6 +9,14 @@ namespace SnakeGame.Model
         private State state;
 
         private Image texture;
+        private Image about;
+        private Image gameOver;
+
+        public MessageComponent()
+        {
+            about    = new Bitmap($"{Application.StartupPath}\\Resources\\About.png");
+            gameOver = new Bitmap($"{Application.StartupPath}\\Resources\\GameOver.png");
+        }
 
         public State State {
             get
@@ -18,10 +26,12 @@ namespace SnakeGame.Model
             set
             {
                 state = value;
-                if(value == State.PAUSE)
-                    texture = new Bitmap($"{Application.StartupPath}\\Resources\\About.png");
-                else if (value == State.GAME_OVER)
-                    texture = new Bitmap($"{Application.StartupPath}\\Resources\\GameOver.png");
+
+                if (value == State.PAUSE)
+                    texture = about;
+                else 
+                if (value == State.GAME_OVER)
+                    texture = gameOver;
             }
         }
 

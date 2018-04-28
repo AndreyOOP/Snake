@@ -33,7 +33,7 @@ namespace SnakeGame
             this.view  = view;
 
             this.LevelService = LevelService;
-            this.LevelService.TimerX = frameTimer;
+            this.LevelService.FrameTimer = frameTimer;
             this.LevelService.Model  = model;
         }
 

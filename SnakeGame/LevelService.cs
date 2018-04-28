@@ -10,7 +10,7 @@ namespace SnakeGame.Services
 {
     public class LevelService
     {
-        public Timer TimerX { get; set; }
+        public Timer FrameTimer { get; set; }
         public GameModel Model { get; set; }
 
         private Random random = new Random();
@@ -47,9 +47,9 @@ namespace SnakeGame.Services
 
         public void IncreaseSpeed(object sender, EventArgs e)
         {
-            if (TimerX.Interval > 40 && Model.GameState == State.IN_GAME)
+            if (FrameTimer.Interval > 40 && Model.GameState == State.IN_GAME)
             {
-                TimerX.Interval -= 2;
+                FrameTimer.Interval -= 2;
             }
         }
 
